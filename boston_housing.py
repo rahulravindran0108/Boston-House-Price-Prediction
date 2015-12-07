@@ -79,11 +79,8 @@ def split_data(city_data):
     ###################################
     ### Step 3. YOUR CODE GOES HERE ###
     ###################################
-
-    offset = int(0.7*len(X))
-    X_train, y_train = X[:offset], y[:offset]
-    X_test, y_test = X[offset:], y[offset:]
-
+    X_train, X_test, y_train, y_test = train_test_split(
+         X, y, test_size=0.30, train_size=0.70, random_state=42)
     return X_train, y_train, X_test, y_test
 
 
@@ -200,7 +197,12 @@ def fit_predict_model(city_data):
     # 2. Use gridearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
 
-    reg = grid_search.GridSearchCV(regressor, parameters, scoring='r2')
+    regressors = grid_search.GridSearchCV(regressor, parameters, scoring='mean_squared_error')
+
+    regressors.fit(X,y)
+
+    # pick the best
+    reg = regressors.best_estimator_
 
     # Fit the learner to the training data
     print "Final Model: "
